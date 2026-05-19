@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container px-4" style="max-width:800px">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="fas fa-user-edit text-primary me-2"></i>{{ title }}</h5>
+    <a href="{{ url_for('contacts.index') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="fas fa-arrow-left me-1"></i>목록
+    </a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row g-3">
+          <div class="col-md-6">
+            {{ form.name.label(class='form-label fw-semibold') }}
+            {{ form.name(class='form-control' + (' is-invalid' if form.name.errors else '')) }}
+            {% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="col-md-6">
+            {{ form.organization.label(class='form-label') }}
+            {{ form.organization(class='form-control') }}
+          </div>
+          <div class="col-md-6">
+            {{ form.phone.label(class='form-label') }}
+            {{ form.phone(class='form-control') }}
+          </div>
+          <div class="col-md-6">
+            {{ form.mobile.label(class='form-label') }}
+            {{ form.mobile(class='form-control') }}
+          </div>
+          <div class="col-md-6">
+            {{ form.email.label(class='form-label') }}
+            {{ form.email(class='form-control' + (' is-invalid' if form.email.errors else '')) }}
+            {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="col-md-3">
+            {{ form.department.label(class='form-label') }}
+            {{ form.department(class='form-control') }}
+          </div>
+          <div class="col-md-3">
+            {{ form.position.label(class='form-label') }}
+            {{ form.position(class='form-control') }}
+          </div>
+          <div class="col-12">
+            {{ form.address.label(class='form-label') }}
+            {{ form.address(class='form-control') }}
+          </div>
+          <div class="col-12">
+            {{ form.memo.label(class='form-label') }}
+            {{ form.memo(class='form-control', rows=3) }}
+          </div>
+
+          <!-- 카테고리 -->
+          <div class="col-md-6">
+            {{ form.categories.label(class='form-label') }}
+            <div class="border rounded p-2" style="max-height:150px;overflow-y:auto">
+              {% for value, label in form.categories.choices %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="categories" value="{{ value }}"
+                  id="cat_{{ value }}" {% if value in (form.categories.data or []) %}checked{% endif %}>
+                <label class="form-check-label" for="cat_{{ value }}">{{ label }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- 태그 -->
+          <div class="col-md-6">
+            {{ form.tags.label(class='form-label') }}
+            <div class="border rounded p-2" style="max-height:150px;overflow-y:auto">
+              {% for value, label in form.tags.choices %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tags" value="{{ value }}"
+                  id="tag_{{ value }}" {% if value in (form.tags.data or []) %}checked{% endif %}>
+                <label class="form-check-label" for="tag_{{ value }}">{{ label }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        {{ form.submit(class='btn btn-primary') }}
+        {% if contact %}
+        <a href="{{ url_for('contacts.detail', contact_id=contact.id) }}" class="btn btn-secondary ms-2">취소</a>
+        {% else %}
+        <a href="{{ url_for('contacts.index') }}" class="btn btn-secondary ms-2">취소</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
